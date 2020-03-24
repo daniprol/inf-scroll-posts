@@ -47,16 +47,26 @@ async function showPosts() {
 showPosts();
 
 // Show loader & fetch more posts:
+// function showLoading() {
+//   loading.classList.add("show");
+
+//   setTimeout(() => {
+//     loading.classList.remove("show");
+
+//     setTimeout(() => {
+//       page++;
+//       showPosts();
+//     }, 300);
+//   }, 1000);
+// }
+
+// Alternative showLoading:
 function showLoading() {
   loading.classList.add("show");
 
   setTimeout(() => {
-    loading.classList.remove("show");
-
-    setTimeout(() => {
-      page++;
-      showPosts();
-    }, 300);
+    page++;
+    showPosts().then(() => loading.classList.remove("show"));
   }, 1000);
 }
 
@@ -68,3 +78,23 @@ window.addEventListener("scroll", () => {
     showLoading();
   }
 });
+
+filter.addEventListener("input", filterPosts);
+
+// filter posts by input:
+function filterPosts(e) {
+  //   console.log(e.target.value);
+  const term = e.target.value.toUpperCase();
+  const posts = document.querySelectorAll(".post");
+
+  posts.forEach(post => {
+    const title = post.querySelector(".post-title").innerText.toUpperCase();
+    const body = post.querySelector(".post-body").innerText.toUpperCase();
+
+    if (title.indexOf(term) > -1 || body.indexOf(term) > -1) {
+      post.style.display = "flex";
+    } else {
+      post.style.display = "none";
+    }
+  });
+}
