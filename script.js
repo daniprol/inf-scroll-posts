@@ -1,0 +1,47 @@
+const postsContainer = document.getElementById("post-container");
+const loading = document.querySelector(".loader");
+const filter = document.getElementById("filter");
+
+let limit = 3;
+let page = 1;
+
+// Fetch posts from API
+async function getPosts() {
+  const res = await fetch(
+    `https://jsonplaceholder.typicode.com/posts?_limit=${limit}&_page=${page}`
+  );
+
+  const data = await res.json();
+  //   console.log(data);
+  return data;
+}
+// getPosts();
+// Arguments passed to a function are always evaluated before the function is called
+// So await function() is evaluated before console.log()
+
+// This doesn't work because await needs to be called inside an asyn function
+// const data = await getPosts();
+
+// getPosts().then(data => console.log(data));
+
+// Show posts in DOM:
+async function showPosts() {
+  const posts = await getPosts();
+
+  //   console.log(posts);
+  posts.forEach(post => {
+    const postEl = document.createElement("div");
+    postEl.classList.add("post");
+    postEl.innerHTML = ` 
+        <div class="number">${post.id}</div>
+        <div class="post-info">
+            <h2 class="post-title">${post.title}</h2>
+            <p class="post-body">${post.body}</p>
+        </div>
+      `;
+    postsContainer.appendChild(postEl);
+  });
+}
+
+// Show initial posts:
+showPosts();
